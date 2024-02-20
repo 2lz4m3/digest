@@ -41,8 +41,7 @@ function App() {
           message = line.trim();
         }
         if (!emptyline && message === '') {
-          setOutput('');
-          return;
+          return Promise.resolve('');
         }
         return digestMessage(message);
       });
@@ -53,8 +52,7 @@ function App() {
         message = input.trim();
       }
       if (!emptyline && message === '') {
-        setOutput('');
-        return;
+        return Promise.resolve('');
       }
       await digestMessage(message).then((value) => { setOutput(value) });
     }
@@ -70,13 +68,16 @@ function App() {
         <Typography variant="h4" gutterBottom>
           digest
         </Typography>
+        <Typography variant="body2" gutterBottom>
+          A message digest tool using <a href="https://developer.mozilla.org/en-US/docs/Web/API/SubtleCrypto/digest" target="_blank" rel="noopener noreferrer">Web Crypto API</a>.
+        </Typography>
         <Box>
           <FormGroup sx={{ my: 2 }}>
             <FormLabel component="legend">Input options</FormLabel>
             <FormControlLabel
               id="multiline"
               control={<Switch />}
-              label="MultiLine"
+              label="MultiLine (digest line by line)"
               checked={multiline}
               onChange={() => {
                 setMultiline(prevState => !prevState);
@@ -85,7 +86,7 @@ function App() {
             <FormControlLabel
               id="emptyline"
               control={<Switch />}
-              label="EmptyLine"
+              label="EmptyLine (digest empty line)"
               checked={emptyline}
               onChange={() => {
                 setEmptyline(prevState => !prevState);
@@ -94,7 +95,7 @@ function App() {
             <FormControlLabel
               id="trim"
               control={<Switch />}
-              label="Trim"
+              label="Trim (trim both ends)"
               checked={trim}
               onChange={() => {
                 setTrim(prevState => !prevState);
